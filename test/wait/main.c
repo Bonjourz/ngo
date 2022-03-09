@@ -23,7 +23,7 @@ static int test_wait_nohang() {
     }
 
     int child_pid = 0;
-    // /bin/sleep lasts more than 1 sec
+    // /bin/sleep sleep for 2 sec
     if (posix_spawn(&child_pid, "/bin/sleep", NULL, NULL, NULL, NULL) < 0) {
         THROW_ERROR("posix_spawn child error");
     }
@@ -33,7 +33,7 @@ static int test_wait_nohang() {
         THROW_ERROR("wait child with NOHANG error");
     }
 
-    sleep(2);
+    sleep(3);
     // The child process should exit
     ret = waitpid(child_pid, &status, WNOHANG);
     if (ret != child_pid) {
