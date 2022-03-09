@@ -21,10 +21,10 @@ static const int SUCCESS = 1;
 static const int FAIL = -1;
 
 // The time obtained from Occlum is not very precise.
-// Here we take 1.5 millisecond as the time precision of Occlum.
+// Here we take 2 millisecond as the time precision of Occlum.
 static struct timespec OS_TIME_PRECISION = {
     .tv_sec = 0,
-    .tv_nsec = 1 * MS + 500 * US,
+    .tv_nsec = 2 * MS,
 };
 
 // ============================================================================
