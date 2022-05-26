@@ -3,6 +3,9 @@
 
 #ifdef __ASSEMBLY__
 
+#define PKRU_LIBOS          (0x0)
+#define PKRU_USER           (0x55555551)
+
 /*In SGX SDK the GS register point to thread_data_t structure and a whole page is
 assigned to the structure. So any offset larger than sizeof(thread_data_t) and
 less than 4096 is unused by anyone. We can use it.*/

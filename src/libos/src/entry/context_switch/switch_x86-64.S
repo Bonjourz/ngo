@@ -64,7 +64,33 @@ __switch_to_user:
     pop %rax
     pop %rcx
     pop %rsp
+
+    push %rax
+    mov pku_enabled(%rip), %rax
+    cmp $1, %rax
+    pop %rax
+    je update_pkru
     jmp *%gs:(TD_USER_RIP)
+    // This should never happen
+    ud2
+
+update_pkru:
+    sub $0x20, %rsp
+    mov %rax, (%rsp)
+    mov %rdx, 0x8(%rsp)
+    mov %rcx, 0x10(%rsp)
+    mov %gs:(TD_USER_RIP), %rcx
+    mov %rcx, 0x18(%rsp)
+
+    xor %ecx, %ecx
+    xor %edx, %edx
+    mov $PKRU_USER, %eax
+    wrpkru
+
+    pop %rax
+    pop %rdx
+    pop %rcx
+    ret
 
     // This should never happen
     ud2
@@ -95,6 +121,22 @@ __switch_to_user:
     // This should never happen
     ud2
 .endm
+
+    .global __syscall_entry_linux_abi_pku
+    .type __syscall_entry_linux_abi_pku, @function
+__syscall_entry_linux_abi_pku:
+    pushq %rcx
+    pushq %rdx
+    pushq %rax
+
+    xor %ecx, %ecx
+    xor %edx, %edx
+    mov $PKRU_LIBOS, %eax
+    wrpkru
+
+    popq %rax
+    popq %rdx
+    popq %rcx
 
     .global __syscall_entry_linux_abi
     .type __syscall_entry_linux_abi, @function
